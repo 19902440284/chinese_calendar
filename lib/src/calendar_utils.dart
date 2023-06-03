@@ -561,8 +561,6 @@ class CalendarUtils {
     }
     //公历传参最下限
     if (year == 1900 && month == 1 && day < 31) {
-      year = 1900;
-      month = 1;
       day = 31;
     }
 
