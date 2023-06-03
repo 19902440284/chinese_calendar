@@ -1,8 +1,6 @@
-/**
- * author:heqian
- * date  :20-2-29 下午6:02
- * email :wskfjtheqian@163.com
- **/
+/// author:heqian
+/// date  :20-2-29 下午6:02
+/// email :wskfjtheqian@163.com
 
 import 'package:flutter/material.dart';
 
@@ -13,54 +11,52 @@ final _weekTexts = const ["日", "一", "二", "三", "四", "五", "六"];
 ///带有农历的日历
 class CalendarView extends StatefulWidget {
   ///初妈时间
-  final DateTime initDateTime;
+  final DateTime? initDateTime;
 
   ///开始时间
-  final DateTime startDateTime;
+  final DateTime? startDateTime;
 
   ///结束时间
-  final DateTime endDateTime;
+  final DateTime? endDateTime;
 
   final EdgeInsetsGeometry contentPadding;
-  final CalendarUtils calendarUtils;
+  final CalendarUtils? calendarUtils;
 
   final Widget Function(CalendarInfo info, Widget child, int month) builderItem;
-  final Widget Function(DateTime dateTime) onChange;
+  final Widget Function(DateTime dateTime)? onChange;
 
   ///显示非当前月的天
-  final bool showOtherDay;
+  final bool? showOtherDay;
 
   ///显示农历
-  final bool showLunary;
+  final bool? showLunary;
 
   const CalendarView({
-    Key key,
+    Key? key,
     this.initDateTime,
     this.contentPadding = const EdgeInsets.only(),
-    this.builderItem,
+    required this.builderItem,
     this.startDateTime,
     this.endDateTime,
     this.calendarUtils,
     this.onChange,
     this.showOtherDay,
     this.showLunary,
-  })  : assert(null != initDateTime),
-        assert(null != contentPadding),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _CalendarViewState createState() => _CalendarViewState();
 }
 
 class _CalendarViewState extends State<CalendarView> {
-  DateTime _dateTime;
-  DateTime _startDateTime;
-  DateTime _endDateTime;
-  PageController _controller;
-  CalendarInfo _info;
-  CalendarUtils _calendarUtils;
+  late DateTime _dateTime;
+  late DateTime _startDateTime;
+  late DateTime _endDateTime;
+  late PageController _controller;
+  late CalendarInfo _info;
+  late CalendarUtils _calendarUtils;
   var _weekKey = GlobalKey();
-  CalendarInfo _toDayInfo;
+  late CalendarInfo _toDayInfo;
 
   set dateTime(DateTime value) {
     _dateTime = value;
@@ -74,7 +70,10 @@ class _CalendarViewState extends State<CalendarView> {
     dateTime = widget.initDateTime ?? DateTime.now();
     _startDateTime = widget.startDateTime ?? DateTime(1900);
     _endDateTime = widget.endDateTime ?? DateTime(2100);
-    _controller = PageController(initialPage: (_dateTime.year - _startDateTime.year) * 12 + _dateTime.month - (_startDateTime.month - 1));
+    _controller = PageController(
+        initialPage: (_dateTime.year - _startDateTime.year) * 12 +
+            _dateTime.month -
+            (_startDateTime.month - 1));
     _toDayInfo = _calendarUtils.getInfo(DateTime.now());
   }
 
@@ -102,12 +101,15 @@ class _CalendarViewState extends State<CalendarView> {
               padding: widget.contentPadding,
               child: PageView.builder(
                 controller: _controller,
-                itemCount: (_endDateTime.year - _startDateTime.year) * 12 + (_endDateTime.month + 1) - (_startDateTime.month - 1),
+                itemCount: (_endDateTime.year - _startDateTime.year) * 12 +
+                    (_endDateTime.month + 1) -
+                    (_startDateTime.month - 1),
                 onPageChanged: _onPageChanged,
                 itemBuilder: (context, index) {
                   return _CalenderContent(
                     builderItem: widget.builderItem,
-                    dateTime: DateTime(_startDateTime.year + index ~/ 12, index % 12),
+                    dateTime:
+                        DateTime(_startDateTime.year + index ~/ 12, index % 12),
                     calendarUtils: _calendarUtils,
                     showOtherDay: widget.showOtherDay,
                     showLunary: widget.showLunary,
@@ -123,26 +125,31 @@ class _CalendarViewState extends State<CalendarView> {
 
   void toDay() {
     var now = DateTime.now();
-    var index = (now.year - _startDateTime.year) * 12 + now.month - (_startDateTime.month - 1);
-    _controller.animateToPage(index.toInt(), duration: Duration(milliseconds: 300), curve: ElasticInOutCurve());
+    var index = (now.year - _startDateTime.year) * 12 +
+        now.month -
+        (_startDateTime.month - 1);
+    _controller.animateToPage(index.toInt(),
+        duration: Duration(milliseconds: 300), curve: ElasticInOutCurve());
   }
 
   void _onChanged(int value) {
-    _controller.animateToPage((_controller.page + value).toInt(), duration: Duration(milliseconds: 300), curve: ElasticInOutCurve());
+    _controller.animateToPage(((_controller.page ?? 0) + value).toInt(),
+        duration: Duration(milliseconds: 300), curve: ElasticInOutCurve());
   }
 
   void _onPageChanged(int index) {
-    _weekKey.currentState.setState(() {
+    _weekKey.currentState?.setState(() {
       dateTime = DateTime(_startDateTime.year + index ~/ 12, index % 12);
     });
     if (null != widget.onChange) {
-      widget.onChange(_dateTime);
+      widget.onChange!(_dateTime);
     }
   }
 
   _buildToDay(BuildContext context) {
     CalenderThemeData theme = CalenderTheme.of(context);
-    var style = theme?.todayStyle ?? TextStyle(color: Theme.of(context).accentColor, fontSize: 12);
+    var style = theme.todayStyle ??
+        TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12);
     return Padding(
       padding: EdgeInsets.only(top: 6, right: 4),
       child: Align(
@@ -166,34 +173,36 @@ class _CalendarViewState extends State<CalendarView> {
 class _CalenderContent extends StatelessWidget {
   final DateTime dateTime;
   final Widget Function(CalendarInfo info, Widget child, int month) builderItem;
-  CalendarUtils calendarUtils;
-  final bool showOtherDay;
-  final bool showLunary;
+  final CalendarUtils calendarUtils;
+  final bool? showOtherDay;
+  final bool? showLunary;
 
   _CalenderContent({
-    Key key,
-    this.dateTime,
-    this.builderItem,
-    this.calendarUtils,
+    Key? key,
+    required this.dateTime,
+    required this.builderItem,
+    required this.calendarUtils,
     this.showOtherDay,
     this.showLunary,
-  })  : assert(null != dateTime),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var temp = DateTime(dateTime.year, dateTime.month);
     int start = 7 == temp.weekday ? 0 : -temp.weekday;
     CalenderThemeData theme = CalenderTheme.of(context);
-    TextStyle dayStyle = theme?.dayStyle ?? TextStyle(color: Color(0xff000000));
-    TextStyle weekStyle = theme?.weekStyle ?? TextStyle(color: Color(0xff000000), fontSize: 16);
-    TextStyle garyStyle = theme?.garyStyle ?? TextStyle(color: Color(0xffcccccc));
-    TextStyle lunarDayStyle = theme?.lunarDayStyle ?? TextStyle(color: Color(0xffcccccc), fontSize: 10);
-    bool otherDay = showOtherDay ?? theme?.showOtherDay ?? false;
-    bool lunary = showLunary ?? theme?.showLunary ?? true;
+    TextStyle dayStyle = theme.dayStyle ?? TextStyle(color: Color(0xff000000));
+    TextStyle weekStyle =
+        theme.weekStyle ?? TextStyle(color: Color(0xff000000), fontSize: 16);
+    TextStyle garyStyle =
+        theme.garyStyle ?? TextStyle(color: Color(0xffcccccc));
+    TextStyle lunarDayStyle = theme.lunarDayStyle ??
+        TextStyle(color: Color(0xffcccccc), fontSize: 10);
+    bool otherDay = showOtherDay ?? theme.showOtherDay ?? false;
+    bool lunary = showLunary ?? theme.showLunary ?? true;
     DateTime now = DateTime.now();
-    Color todayColor = theme?.todayColor ?? Colors.orange;
-    Color todayTextColor = theme?.todayTextColor ?? Colors.white;
+    Color todayColor = theme.todayColor ?? Colors.orange;
+    Color todayTextColor = theme.todayTextColor ?? Colors.white;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -216,7 +225,10 @@ class _CalenderContent extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor))),
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom:
+                          BorderSide(color: Theme.of(context).dividerColor))),
             ),
           ]..addAll(List.generate(6, (i) => i).map((c) {
               return Row(
@@ -225,8 +237,9 @@ class _CalenderContent extends StatelessWidget {
                   var dayDate = temp.add(Duration(days: start + c * 7 + r));
 
                   var info = calendarUtils.getInfo(dayDate);
-                  bool isToday = 0 == CalendarUtils.compareDate(now, info.solarDate);
-                  Widget child;
+                  bool isToday =
+                      0 == CalendarUtils.compareDate(now, info.solarDate);
+                  Widget child = SizedBox();
                   if (dateTime.month == dayDate.month || otherDay) {
                     child = Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -234,22 +247,30 @@ class _CalenderContent extends StatelessWidget {
                         Text(
                           dayDate.day.toString().padLeft(2, "0"),
                           style: dateTime.month == dayDate.month
-                              ? (isToday ? dayStyle.copyWith(color: todayTextColor) : dayStyle)
-                              : (isToday ? garyStyle.copyWith(color: todayTextColor) : garyStyle),
+                              ? (isToday
+                                  ? dayStyle.copyWith(color: todayTextColor)
+                                  : dayStyle)
+                              : (isToday
+                                  ? garyStyle.copyWith(color: todayTextColor)
+                                  : garyStyle),
                         ),
                       ]..addAll(lunary
                           ? [
                               Text(
-                                info.lunarFestival ?? info.festival ?? info.term ?? info.lunarDayName,
-                                style: (isToday ? lunarDayStyle.copyWith(color: todayTextColor) : lunarDayStyle),
+                                info.lunarFestival ??
+                                    info.festival ??
+                                    info.term ??
+                                    info.lunarDayName,
+                                style: (isToday
+                                    ? lunarDayStyle.copyWith(
+                                        color: todayTextColor)
+                                    : lunarDayStyle),
                                 overflow: TextOverflow.clip,
                               )
                             ]
                           : []),
                     );
-                    if (null != builderItem) {
-                      child = builderItem(info, child, dateTime.month);
-                    }
+                    child = builderItem(info, child, dateTime.month);
                   }
 
                   return Container(
@@ -257,7 +278,8 @@ class _CalenderContent extends StatelessWidget {
                     height: height - 6,
                     margin: EdgeInsets.symmetric(vertical: 3),
                     child: child,
-                    decoration: (dateTime.month == dayDate.month || otherDay) && isToday
+                    decoration: (dateTime.month == dayDate.month || otherDay) &&
+                            isToday
                         ? BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50)),
                             color: todayColor,
@@ -277,23 +299,22 @@ class _CalenderTitle extends StatelessWidget {
   final DateTime dateTime;
   final void Function(int number) onChange;
   final CalendarInfo info;
-  final bool showLunary;
+  final bool? showLunary;
 
   const _CalenderTitle({
-    Key key,
-    this.dateTime,
-    this.onChange,
-    this.info,
+    Key? key,
+    required this.dateTime,
+    required this.onChange,
+    required this.info,
     this.showLunary,
-  })  : assert(null != dateTime),
-        assert(null != onChange),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     CalenderThemeData theme = CalenderTheme.of(context);
-    TextStyle titleStyle = theme?.titleStyle ?? TextStyle(color: Color(0xff000000), fontSize: 17);
-    bool lunary = showLunary ?? theme?.showLunary ?? true;
+    TextStyle titleStyle =
+        theme.titleStyle ?? TextStyle(color: Color(0xff000000), fontSize: 17);
+    bool lunary = showLunary ?? theme.showLunary ?? true;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -312,8 +333,9 @@ class _CalenderTitle extends StatelessWidget {
         ),
         Text.rich(
           TextSpan(
-              text: "${dateTime.year.toString().padLeft(4, "0")}年${dateTime.month.toString().padLeft(2, "0")}月" +
-                  (lunary ? "\u3000${info.gzYear}${info.animal}年" : "")),
+              text:
+                  "${dateTime.year.toString().padLeft(4, "0")}年${dateTime.month.toString().padLeft(2, "0")}月" +
+                      (lunary ? "\u3000${info.gzYear}${info.animal}年" : "")),
           style: titleStyle,
         ),
         Row(

@@ -1,24 +1,22 @@
 import 'package:flutter/widgets.dart';
 
-/**
- * author:heqian
- * date  :20-3-1 下午10:27
- * email :wskfjtheqian@163.com
- **/
+/// author:heqian
+/// date  :20-3-1 下午10:27
+/// email :wskfjtheqian@163.com
 
 //日历主题
 class CalenderTheme extends InheritedWidget {
-  final CalenderThemeData data;
+  final CalenderThemeData? data;
 
   const CalenderTheme({
-    Key key,
+    Key? key,
     this.data,
-    @required Widget child,
-  })  : assert(child != null),
-        super(key: key, child: child);
+    required Widget child,
+  }) : super(key: key, child: child);
 
   static CalenderThemeData of(BuildContext context) {
-    return context.findAncestorWidgetOfExactType<CalenderTheme>()?.data;
+    return context.findAncestorWidgetOfExactType<CalenderTheme>()?.data ??
+        CalenderThemeData();
   }
 
   @override
@@ -29,43 +27,43 @@ class CalenderTheme extends InheritedWidget {
 
 class CalenderThemeData {
   ///阳历每天的文字样式
-  final TextStyle dayStyle;
+  final TextStyle? dayStyle;
 
   ///阳历非当前月每天的文字样式
-  final TextStyle garyStyle;
+  final TextStyle? garyStyle;
 
   ///星期的文字样式
-  final TextStyle weekStyle;
+  final TextStyle? weekStyle;
 
   ///农历每天的文字样式
-  final TextStyle lunarDayStyle;
+  final TextStyle? lunarDayStyle;
 
   ///标题文件样式
-  final TextStyle titleStyle;
+  final TextStyle? titleStyle;
 
   ///标题文件样式
-  final TextStyle todayStyle;
+  final TextStyle? todayStyle;
 
   ///选中的背景颜色
-  final Color selectColor;
+  final Color? selectColor;
 
   ///选中的文字颜色
-  final Color selectTextColor;
+  final Color? selectTextColor;
 
   ///今天的背景颜色
-  final Color todayColor;
+  final Color? todayColor;
 
   ///今天的文字颜色
-  final Color todayTextColor;
+  final Color? todayTextColor;
 
   ///显示非当前月的天
-  final bool showOtherDay;
+  final bool? showOtherDay;
 
   ///显示农历
-  final bool showLunary;
+  final bool? showLunary;
 
   ///选择非当前月的天
-  final bool selectOtherDay;
+  final bool? selectOtherDay;
 
   CalenderThemeData({
     this.dayStyle,
