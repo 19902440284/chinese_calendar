@@ -275,7 +275,6 @@ Future<dynamic> sDateRangePicker({
                             ),
                             SizedBox(width: 12),
                             ElevatedButton(
-                              // color: Theme.of(context).primaryColor,
                               child: Text(
                                 "确定",
                                 style: TextStyle(color: Colors.white),

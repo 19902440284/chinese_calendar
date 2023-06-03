@@ -48,7 +48,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text("选择日期对话框"),
             onTap: () async {
-              sDateRangePicker(context: context, initDateTime: DateTime.now());
+              var _result = await sDateRangePicker(
+                context: context,
+                initDateTime: DateTime.now(),
+                isRange: false,
+              );
+              print("查看$_result");
             },
           ),
         ],
