@@ -48,12 +48,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ListTile(
             title: Text("选择日期对话框"),
             onTap: () async {
-              var _result = await sDateRangePicker(
-                context: context,
-                initDateTime: DateTime.now(),
-                isRange: false,
-              );
-              print("查看$_result");
+              await CalendarSelectionView(
+                startDateTime: DateTime.parse("2022-02-02"),
+                endDateTime: DateTime.parse("2023-12-15"),
+              ).show(context);
+              // var _result = await sDateRangePicker(
+              //   context: context,
+              //   initDateTime: DateTime.now(),
+              //   startDateTime: DateTime.parse("1997-01-01"),
+              //   isRange: false,
+              // );
+              // print("查看$_result");
             },
           ),
         ],
@@ -81,6 +86,7 @@ class _BasePageState extends State<BasePage> {
             child: CalendarView(
               initDateTime: DateTime.now(),
               builderItem: _builderItem,
+              showOtherDay: true,
             ),
           ),
           Text(""),
